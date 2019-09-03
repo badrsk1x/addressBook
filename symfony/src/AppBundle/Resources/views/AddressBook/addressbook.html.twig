@@ -1,0 +1,85 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Add a new contact{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+<style>
+    .img-thumbnail{
+        max-width: 200px;
+    }
+
+</style>
+
+{% endblock %}
+
+{% block body %}
+
+
+    <div class="row">
+   
+        <div class="col-md-4"><h1>
+         {% if ( picture is defined) %}
+         Edit the contact
+         {% else %}
+          Add a new contact
+         {% endif %}
+       </h1></div>
+    </div>
+
+    {% for label,  messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                <strong>{{ message }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+
+    <div class="row">
+        <div class="col-md-9">
+            {{ form_start(form, {'attr': {'class': 'Form Form--spaced u-background-grey-10 u-text-r-xs u-layout-prose'}}) }}
+
+            {{ form_row(form.firstname) }}
+            {{ form_row(form.lastname) }}
+            {{ form_row(form.streetAndNumber) }}
+            {{ form_row(form.zip) }}
+            {{ form_row(form.city) }}
+            {{ form_row(form.country) }}
+            {{ form_row(form.phonenumber) }}
+            {{ form_row(form.birthday) }}
+            {{ form_row(form.email) }}
+
+            {% if ( picture is defined) %}
+                {% if picture is not empty %}
+                    <img src="{{ asset('uploads/' ~ picture) }}" class="img-thumbnail" >
+                {% else %}
+                    <img src="{{ asset('uploads/default.jpeg') }}" class="img-thumbnail" >
+                {% endif %}
+            {% endif %}
+            {{ form_row(form.picture) }}
+
+
+            {{ form_end(form) }}
+
+
+
+        </div>
+    </div>
+
+
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        jQuery(document).ready(function() {
+
+            $('#address_book_birthday').datepicker({
+             format: 'yyyy-mm-dd'
+            });
+        });
+    </script>
+{% endblock %}
