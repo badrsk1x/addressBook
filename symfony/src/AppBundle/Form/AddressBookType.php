@@ -6,6 +6,7 @@ namespace AppBundle\Form;
 use AppBundle\Entity\AddressBook;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -39,7 +40,7 @@ class AddressBookType extends AbstractType
                 'attr'          => array('class' => 'Form-input', 'id' => 'streetAndNumber'),
                 'required'      => true,
             ))
-            ->add('zip', TextType::class, array(
+            ->add('zip', NumberType::class, array(
                 'label'         => 'Zip number',
                 'label_attr'    => array('class' => 'Form-label is-required'),
                 'attr'          => array('class' => 'Form-input', 'id' => 'zip'),
@@ -82,6 +83,7 @@ class AddressBookType extends AbstractType
                 'label'         => 'Upload a picture ',
                 'label_attr'    => array('class' => 'Form-label '),
                 'attr'          => array('class' => 'Form-input', 'id' => 'picture'),
+                'data_class'    => null ,
                 'required'      => false,
             ))
             ->add('save', SubmitType::class, array(

@@ -27,6 +27,13 @@ class AddressBookController extends Controller
      */
     private $addressBookRepository;
 
+
+    /**
+     * @var FileManager
+     * @access private
+     */
+    private $fileManager;
+
     /**
      * @var string
      * @access public
@@ -42,9 +49,11 @@ class AddressBookController extends Controller
     public function __construct(
         string $imagesDir,
         int $pageLimit,
-        AddressBookRepository $addressBookRepository
+        AddressBookRepository $addressBookRepository,
+        FileManager $fileManager
     ) {
         $this->addressBookRepository = $addressBookRepository;
+        $this->fileManager = $fileManager;
         $this->imagesDir = $imagesDir;
         $this->pageLimit = $pageLimit;
     }
@@ -53,6 +62,7 @@ class AddressBookController extends Controller
     * Add a new AddressBook entity.
     * @Route("/addressbook/add",name="AddAddressBook", methods={"GET","POST"})
     * @param Request $request
+    * @param FileManager $fileManager
     * @return Response
     */
     public function InsertAction(Request $request):Response
@@ -82,6 +92,13 @@ class AddressBookController extends Controller
      */
     public function editAction(AddressBook $addressBook, Request $request):Response
     {
+        $fileName = $addressBook->getPicture();
+ 
+        if ($fileName && file_exists($this->imagesDir.'/'.$fileName)) {
+            $file = new File($this->imagesDir.'/'.$fileName);
+            $addressBook->setPicture($file);
+        }
+
         $form = $this->createForm(AddressBookType::class, $addressBook);
         $form->handleRequest($request);
  
@@ -89,12 +106,12 @@ class AddressBookController extends Controller
             $this->handleAddressBookRequest($form, $addressBook, 'edit');
             return $this->redirectToRoute('ReadAddressBook', array('page' => '1'));
         }
- 
+
         return $this->render(
             '@App/AddressBook/addressbook.html.twig',
             [
                 'form'=> $form->createView(),
-                'picture'=>$addressBook->getPicture()
+                'picture'=>$fileName
             ]
         );
     }
@@ -142,6 +159,7 @@ class AddressBookController extends Controller
      * handle AddressBook form request
      * @param \Symfony\Component\Form\Form $form
      * @param  AddressBook $addressBook
+     * @param FileManager $fileManager
      * @param string $type
      * @return bool
      */
@@ -149,22 +167,21 @@ class AddressBookController extends Controller
     {
         $data = $form->getData();
         $fileEntered = $data->getPicture();
+
         if ($fileEntered) {
             try {
                 if ($type=='edit') {
-                    //Delete the old file
                     $filesystem = new Filesystem();
                     $filesystem->remove($this->imagesDir.'/'.$fileEntered);
                 }
-                //Upload the file
-                $fileManager = new FileManager();
-                $fileName = $fileManager->uploadFile($fileEntered);
+
+                $fileName = $this->fileManager->uploadFile($fileEntered);
                 $data->setPicture($fileName);
             } catch (FileException $e) {
                 $this->addFlash('error', 'The picture was not uploaded correctly!');
             }
         }
-        
+
         $this->addressBookRepository->makeRequest($addressBook);
         
         $msg = ($type=='edit') ? 'The entry was modified!' : 'The new entry was added!';

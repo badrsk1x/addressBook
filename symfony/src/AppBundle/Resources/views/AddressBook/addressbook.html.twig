@@ -53,9 +53,7 @@
 
             {% if ( picture is defined) %}
                 {% if picture is not empty %}
-                    <img src="{{ asset('uploads/' ~ picture) }}" class="img-thumbnail" >
-                {% else %}
-                    <img src="{{ asset('uploads/default.jpeg') }}" class="img-thumbnail" >
+                    <img src="{{ asset('files/' ~ picture) }}" class="img-thumbnail" >
                 {% endif %}
             {% endif %}
             {{ form_row(form.picture) }}

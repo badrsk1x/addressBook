@@ -54,8 +54,6 @@
             <td>                        
                 {% if addressbook.picture is not empty %}
                     <img src="{{ asset('files/' ~ addressbook.picture) }}" class="img-thumbnail" >
-                {% else %}
-                    <img src="{{ asset('files/default.jpeg') }}" class="img-thumbnail" >
                 {% endif %}
             </td>
             <td>

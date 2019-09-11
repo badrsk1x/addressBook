@@ -53,9 +53,9 @@ class AddressBook
     private $streetAndNumber;
 
     /**
-     * @var string
+     * @var int
      *
-     * @ORM\Column(name="zip", type="string", length=15, nullable=false)
+     * @ORM\Column(name="zip", type="integer", nullable=false)
      */
     private $zip;
 
@@ -325,7 +325,7 @@ class AddressBook
      *
      * @return string
      */
-    public function setPicture($picture)
+    public function setPicture($picture=null)
     {
         $this->picture = $picture;
 

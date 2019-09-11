@@ -56,7 +56,6 @@ final class AddressBookRepository
     {
         try {
             $fileName = $addressBook->getPicture();
-            //First delete the image from the folder
             $filesystem = new Filesystem();
             $filesystem->remove($this->imagesDir.'/'.$fileName);
             $this->em->remove($addressBook);
@@ -77,7 +76,6 @@ final class AddressBookRepository
 
     public function findListByPage(int $page = 1, int $limit): Paginator
     {
-        //Get all Addressbook list
         $query = $this->repository->createQueryBuilder('p')
             ->orderBy('p.firstname', 'DESC')
             ->getQuery();
@@ -91,7 +89,7 @@ final class AddressBookRepository
      *
      * @param Doctrine\ORM\Query $dql   DQL Query Object
      * @param integer            $page  Current page (defaults to 1)
-     * @param integer            $limit The total number per page (defaults to 10)
+     * @param integer            $limit The total number per page
      *
      * @return \Doctrine\ORM\Tools\Pagination\Paginator
      */
@@ -100,8 +98,8 @@ final class AddressBookRepository
     {
         $paginator = new Paginator($dql);
         $paginator->getQuery()
-            ->setFirstResult($limit * ($page - 1)) // Offset
-            ->setMaxResults($limit); // Limit
+            ->setFirstResult($limit * ($page - 1))
+            ->setMaxResults($limit);
         return $paginator;
     }
 }
